@@ -29,10 +29,10 @@
   <meta name="robots" content="noindex, nofollow">
 
   <title>Réveillon 2027 no Vasto | Brasília</title>
-  <meta name="description" content="Celebre a chegada de 2027 no Vasto: música ao vivo, cardápio completo e a virada do ano no Vasto 108 Sul e no Vasto Brasília Shopping. Faça sua pré-reserva.">
+  <meta name="description" content="Celebre a chegada de 2027 no Vasto: música ao vivo, cardápio completo e a virada do ano no Vasto 108 Sul e no Vasto Brasília Shopping. Garanta seu ingresso.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Réveillon 2027 no Vasto | Brasília">
-  <meta property="og:description" content="Música ao vivo e a virada do ano no Vasto 108 Sul e no Vasto Brasília Shopping. Faça sua pré-reserva.">
+  <meta property="og:description" content="Música ao vivo e a virada do ano no Vasto 108 Sul e no Vasto Brasília Shopping. Garanta seu ingresso.">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#0d0a07">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
@@ -115,6 +115,7 @@
       transform: translateX(-120%); animation: shine 6.5s ease-in-out 1.6s infinite;
     }
     .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 22px 50px -18px color-mix(in oklch, var(--glow) 90%, transparent), inset 0 1px 0 oklch(100% 0 0 / .3); }
+    @media (max-width: 480px) { .btn { padding: 0 18px; letter-spacing: .2em; white-space: normal; text-align: center; line-height: 1.35; gap: 10px; } }
     @keyframes shine { 0%, 70% { transform: translateX(-120%); } 90%, 100% { transform: translateX(120%); } }
     .btn-line { color: var(--cream); box-shadow: inset 0 0 0 1px var(--line-gold); background: oklch(14% .015 60 / .3); }
     .btn-line::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--gold-tint); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease); }
@@ -507,7 +508,7 @@
       <nav class="nav" aria-label="Seções">
         <a href="#unidade-108-sul">108 Sul</a>
         <a href="#unidade-brasilia-shopping">Brasília Shopping</a>      </nav>
-      <a class="btn btn-gold" href="#reserva" data-track="cta_header">Pré-reserva</a>
+      <a class="btn btn-gold" href="#reserva" data-track="cta_header">Garanta seu ingresso</a>
     </div>
   </header>
 
@@ -534,15 +535,15 @@
           </div>
           <p class="lead rise" style="--d:.28s">Um novo ciclo se inicia. Comece o ano de um jeito inesquecível, com música ao vivo, companhias incríveis e o cardápio completo do Vasto.</p>
           <div class="hero-actions rise" style="--d:.34s">
-            <a class="btn btn-gold" href="#reserva" data-track="cta_hero">Fazer minha pré-reserva<svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-gold" href="#reserva" data-track="cta_hero">Garanta seu ingresso<svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
             <a class="btn btn-line" href="#unidades" data-track="cta_ver_unidades">Ver unidades</a>
           </div>
         </div>
 
         <div class="form-card rise" style="--d:.3s" id="reserva">
           <form id="lead-form" novalidate>
-            <h2>Faça sua pré-reserva</h2>
-            <p class="sub">Preencha os dados e continue o atendimento com a equipe da unidade pelo WhatsApp.</p>
+            <h2>Garanta seu ingresso</h2>
+            <p class="sub">Preencha os dados e finalize a compra com a equipe da unidade pelo WhatsApp.</p>
             <div class="fields">
               <fieldset class="field">
                 <legend>Unidade</legend>
@@ -584,7 +585,7 @@
                 <label for="f-site">Não preencha</label>
                 <input id="f-site" name="site" type="text" tabindex="-1" autocomplete="off">
               </div>
-              <button class="btn btn-gold" type="submit" id="f-submit"><span class="spin" aria-hidden="true"></span><span class="label">Fazer pré-reserva</span><svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+              <button class="btn btn-gold" type="submit" id="f-submit"><span class="spin" aria-hidden="true"></span><span class="label">Garantir meu ingresso</span><svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></button>
               <p class="consent">Ao enviar, você concorda com a <a href="https://cocobambu.com/policy" target="_blank" rel="noopener">Política de Privacidade</a> e em receber contato do Vasto sobre o Réveillon.</p>
             </div>
           </form>
@@ -642,7 +643,7 @@
                 <p class="pay"><svg aria-hidden="true"><use href="#i-card"/></svg>Dividimos em <b>2x no cartão</b></p>
               </div>
               <div class="unit-actions">
-                <a class="btn btn-gold" href="#reserva" data-pick="Vasto 108 Sul">Reservar nesta unidade<svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                <a class="btn btn-gold" href="#reserva" data-pick="Vasto 108 Sul">Garantir ingresso nesta unidade<svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
               </div>
             </div>
           </article>
@@ -698,7 +699,7 @@
                 </ul>
               </details>
               <div class="unit-actions">
-                <a class="btn btn-gold" href="#reserva" data-pick="Vasto Brasília Shopping">Reservar nesta unidade<svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                <a class="btn btn-gold" href="#reserva" data-pick="Vasto Brasília Shopping">Garantir ingresso nesta unidade<svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
               </div>
             </div>
           </article>
@@ -713,10 +714,10 @@
       </div>
       <div class="glitter" aria-hidden="true"></div>
       <div class="container reveal">
-        <span class="eyebrow center">Pré-reservas abertas</span>
+        <span class="eyebrow center">Ingressos à venda</span>
         <h2>Comece 2027<br> <span class="gold">no&nbsp;Vasto</span></h2>
-        <p>Escolha a unidade, garanta sua mesa e deixe o resto com a gente.</p>
-        <a class="btn btn-gold" href="#reserva" data-track="cta_final">Fazer minha pré-reserva<svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <p>Escolha a unidade, garanta seu ingresso e deixe o resto com a gente.</p>
+        <a class="btn btn-gold" href="#reserva" data-track="cta_final">Garanta seu ingresso<svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         <span class="finale-meta">Faltam <b data-cd-days>--</b> dias para a virada</span>
       </div>
     </section>
@@ -1158,8 +1159,8 @@
       var qtd = pessoas === 'Mais de 10' ? 'mais de 10 pessoas' : pessoas + (pessoas === '1' ? ' pessoa' : ' pessoas');
       var primeiroNome = payload.name.split(/\s+/)[0];
       var waUrl = 'https://wa.me/' + WHATSAPP[unidade] + '?text=' + encodeURIComponent(
-        'Olá! Sou ' + primeiroNome + ' e acabei de fazer a pré-reserva do Réveillon 2027 no ' + unidade +
-        ' para ' + qtd + '. Gostaria de saber as mesas disponíveis e como garantir minha reserva.');
+        'Olá! Sou ' + primeiroNome + ' e quero garantir meu ingresso para o Réveillon 2027 no ' + unidade +
+        ' para ' + qtd + '. Gostaria de saber as mesas disponíveis e como finalizar a compra.');
 
       // Envia ao RD; com ou sem sucesso, o lead segue para o WhatsApp da unidade
       sendToRD(payload).catch(function () {
