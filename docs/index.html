@@ -746,10 +746,9 @@
 
   <script>
   (function () {
-    // Integração com o RD Station (mesma conta e campos personalizados da LP antiga do Vasto)
+    // Integração: o lead vai só para o n8n (planilha de cada unidade); não há mais envio ao RD Station
     var CONFIG = {
-      rdPublicToken: '031e2f187f5c1353887fa2caa5582de4',
-      conversionIdentifier: 'vasto-reveillon-2027-df',
+      formId: 'vasto-reveillon-2027',
       // Fluxo n8n "Leads LP Réveillon 2027 - Vasto -> Planilhas por unidade"
       leadWebhook: 'https://nutri-n8n-blueocean.hrkyv4.easypanel.host/webhook/lp-reveillon-vasto',
       newYear: new Date('2027-01-01T00:00:00-03:00')
@@ -1112,7 +1111,7 @@
     var submit = document.getElementById('f-submit');
     var started = false;
     form.addEventListener('input', function () {
-      if (!started) { started = true; track('form_start', { form_id: CONFIG.conversionIdentifier }); }
+      if (!started) { started = true; track('form_start', { form_id: CONFIG.formId }); }
     });
 
     function validate() {
@@ -1147,21 +1146,6 @@
       return o;
     }
 
-    function sendToRD(payload) {
-      var ctrl = 'AbortController' in window ? new AbortController() : null;
-      var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 4000);
-      return fetch('https://api.rd.services/platform/conversions?api_key=' + CONFIG.rdPublicToken, {
-        method: 'POST',
-        keepalive: true,
-        signal: ctrl ? ctrl.signal : undefined,
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ event_type: 'CONVERSION', event_family: 'CDP', payload: payload })
-      }).then(function (r) {
-        clearTimeout(timer);
-        if (!r.ok) throw new Error('RD ' + r.status);
-      });
-    }
-
     // Envia ao n8n (planilha da unidade). text/plain evita o preflight de CORS;
     // o n8n converte o corpo de volta em JSON no nó "Normalizar Body".
     function sendToWebhook(lead) {
@@ -1185,23 +1169,11 @@
       var unidade = form.elements.unidade.value;
       var pessoas = form.elements.pessoas.value;
       var u = utm();
-      var payload = {
-        conversion_identifier: CONFIG.conversionIdentifier,
-        name: form.elements.nome.value.trim(),
-        email: form.elements.email.value.trim(),
-        mobile_phone: '+55' + form.elements.telefone.value.replace(/\D/g, ''),
-        cf_vasto_bsb_reveillon_eu: unidade,
-        cf_quantidade_de_pessoas_na_mesa: pessoas,
-        traffic_source: u.utm_source,
-        traffic_medium: u.utm_medium,
-        traffic_campaign: u.utm_campaign,
-        traffic_value: u.utm_term
-      };
-      Object.keys(payload).forEach(function (k) { if (payload[k] === undefined) delete payload[k]; });
+      var nome = form.elements.nome.value.trim();
 
       var lead = {
-        nome: payload.name,
-        email: payload.email,
+        nome: nome,
+        email: form.elements.email.value.trim(),
         telefone: form.elements.telefone.value.replace(/\D/g, ''),
         unidade: unidade,
         pessoas: pessoas,
@@ -1219,22 +1191,17 @@
 
       // Mensagem personalizada para o WhatsApp da unidade escolhida
       var qtd = pessoas === 'Mais de 10' ? 'mais de 10 pessoas' : pessoas + (pessoas === '1' ? ' pessoa' : ' pessoas');
-      var primeiroNome = payload.name.split(/\s+/)[0];
+      var primeiroNome = nome.split(/\s+/)[0];
       var waUrl = 'https://wa.me/' + WHATSAPP[unidade] + '?text=' + encodeURIComponent(
         'Olá! Sou ' + primeiroNome + ' e quero garantir meu ingresso para o Réveillon 2027 no ' + unidade +
         ' para ' + qtd + '. Gostaria de saber as mesas disponíveis e como finalizar a compra.');
 
-      // Envia ao RD e ao n8n em paralelo; com ou sem sucesso, o lead segue para o WhatsApp da unidade
-      Promise.all([
-        sendToRD(payload).catch(function () {
-          track('form_error', { form_id: CONFIG.conversionIdentifier, unidade: unidade, destino: 'rd' });
-        }),
-        sendToWebhook(lead).catch(function () {
-          track('form_error', { form_id: CONFIG.conversionIdentifier, unidade: unidade, destino: 'n8n' });
-        })
-      ]).then(function () {
+      // Envia ao n8n; com ou sem sucesso, o lead segue para o WhatsApp da unidade
+      sendToWebhook(lead).catch(function () {
+        track('form_error', { form_id: CONFIG.formId, unidade: unidade, destino: 'n8n' });
+      }).then(function () {
         if (window.fbq) fbq('track', 'Lead', { content_name: unidade });
-        track('generate_lead', { form_id: CONFIG.conversionIdentifier, unidade: unidade, pessoas_na_mesa: pessoas });
+        track('generate_lead', { form_id: CONFIG.formId, unidade: unidade, pessoas_na_mesa: pessoas });
         track('redirect_whatsapp', { unidade: unidade });
         submit.querySelector('.label').textContent = 'Abrindo o WhatsApp…';
         confetti(function () { window.location.href = waUrl; });
