@@ -750,6 +750,8 @@
     var CONFIG = {
       rdPublicToken: '031e2f187f5c1353887fa2caa5582de4',
       conversionIdentifier: 'vasto-reveillon-2027-df',
+      // Fluxo n8n "Leads LP Réveillon 2027 - Vasto -> Planilhas por unidade"
+      leadWebhook: 'https://nutri-n8n-blueocean.hrkyv4.easypanel.host/webhook/lp-reveillon-vasto',
       newYear: new Date('2027-01-01T00:00:00-03:00')
     };
 
@@ -1160,6 +1162,21 @@
       });
     }
 
+    // Envia ao n8n (planilha da unidade). text/plain evita o preflight de CORS;
+    // o n8n converte o corpo de volta em JSON no nó "Normalizar Body".
+    function sendToWebhook(lead) {
+      var ctrl = 'AbortController' in window ? new AbortController() : null;
+      var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 4000);
+      return fetch(CONFIG.leadWebhook, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        signal: ctrl ? ctrl.signal : undefined,
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify(lead)
+      }).then(function () { clearTimeout(timer); });
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (form.elements.site.value) return; // honeypot
@@ -1182,6 +1199,21 @@
       };
       Object.keys(payload).forEach(function (k) { if (payload[k] === undefined) delete payload[k]; });
 
+      var lead = {
+        nome: payload.name,
+        email: payload.email,
+        telefone: form.elements.telefone.value.replace(/\D/g, ''),
+        unidade: unidade,
+        pessoas: pessoas,
+        utm_source: u.utm_source || '',
+        utm_medium: u.utm_medium || '',
+        utm_campaign: u.utm_campaign || '',
+        utm_content: u.utm_content || '',
+        utm_term: u.utm_term || '',
+        page_url: location.href,
+        submittedAt: new Date().toISOString()
+      };
+
       submit.disabled = true;
       submit.querySelector('.label').textContent = 'Enviando…';
 
@@ -1192,10 +1224,15 @@
         'Olá! Sou ' + primeiroNome + ' e quero garantir meu ingresso para o Réveillon 2027 no ' + unidade +
         ' para ' + qtd + '. Gostaria de saber as mesas disponíveis e como finalizar a compra.');
 
-      // Envia ao RD; com ou sem sucesso, o lead segue para o WhatsApp da unidade
-      sendToRD(payload).catch(function () {
-        track('form_error', { form_id: CONFIG.conversionIdentifier, unidade: unidade });
-      }).then(function () {
+      // Envia ao RD e ao n8n em paralelo; com ou sem sucesso, o lead segue para o WhatsApp da unidade
+      Promise.all([
+        sendToRD(payload).catch(function () {
+          track('form_error', { form_id: CONFIG.conversionIdentifier, unidade: unidade, destino: 'rd' });
+        }),
+        sendToWebhook(lead).catch(function () {
+          track('form_error', { form_id: CONFIG.conversionIdentifier, unidade: unidade, destino: 'n8n' });
+        })
+      ]).then(function () {
         if (window.fbq) fbq('track', 'Lead', { content_name: unidade });
         track('generate_lead', { form_id: CONFIG.conversionIdentifier, unidade: unidade, pessoas_na_mesa: pessoas });
         track('redirect_whatsapp', { unidade: unidade });
