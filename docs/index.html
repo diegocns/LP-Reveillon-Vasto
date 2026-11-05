@@ -38,11 +38,16 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <link rel="preconnect" href="https://api.fontshare.com">
-  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600&display=swap" rel="stylesheet">
+  <link rel="preload" href="assets/fonts/gs-200.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/gs-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" href="assets/fundo-fogos-800.webp" imagesrcset="assets/fundo-fogos-800.webp 800w, assets/fundo-fogos-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">
 
   <style>
+    @font-face { font-family: "General Sans"; font-style: normal; font-weight: 200; font-display: swap; src: url("assets/fonts/gs-200.woff2") format("woff2"); }
+    @font-face { font-family: "General Sans"; font-style: normal; font-weight: 300; font-display: swap; src: url("assets/fonts/gs-300.woff2") format("woff2"); }
+    @font-face { font-family: "General Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url("assets/fonts/gs-400.woff2") format("woff2"); }
+    @font-face { font-family: "General Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("assets/fonts/gs-500.woff2") format("woff2"); }
+
     /* Tokens da identidade Vasto (vasto.cocobambubsb.com.br / vastobsb.cocobambubsb.com.br) */
     :root {
       --ink: oklch(14% .015 60);
@@ -215,6 +220,7 @@
       border: 0; border-radius: 50%; background: transparent; color: var(--gold); font-size: 14px;
       box-shadow: inset 0 0 0 1px var(--line-gold); transition: background .3s, box-shadow .3s, color .3s, opacity .3s;
     }
+    @media (pointer: coarse) { .step-btn { width: 44px; height: 44px; } .consent a { padding: 6px 0; display: inline-block; } }
     .step-btn:hover { background: var(--gold-tint); box-shadow: inset 0 0 0 1px var(--gold); }
     .step-btn:active { background: var(--gold); color: var(--ink); }
     .step-btn[disabled] { opacity: .3; cursor: default; background: transparent; box-shadow: inset 0 0 0 1px var(--line-gold); color: var(--gold); }
@@ -257,6 +263,7 @@
 
     /* Seções */
     .section { position: relative; padding: 104px 0; }
+    .finale { content-visibility: auto; contain-intrinsic-size: auto 640px; }
     @media (min-width: 1024px) { .section { padding: 144px 0; } }
     .section-head { text-align: center; max-width: 52rem; margin: 0 auto 72px; }
     .section-head h2 { margin-top: 24px; font-size: clamp(36px, 5.6vw, 68px); }
@@ -347,12 +354,17 @@
     .units { gap: 56px; }
     .unit { position: relative; isolation: isolate; padding: 44px 20px 52px; }
     @media (min-width: 900px) { .unit { padding: 64px 64px 72px; } }
-    .unit::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--stage) center / cover; }
+    .unit::before { content: ""; position: absolute; inset: 0; z-index: -2; background: center / cover no-repeat; }
+    .unit.stage-on::before, html:not(.js) .unit::before { background-image: var(--stage); }
     .unit::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
       background: linear-gradient(180deg, oklch(11% .012 60 / .5), oklch(11% .012 60 / .78) 45%, oklch(11% .012 60 / .88));
       box-shadow: inset 0 0 0 1px var(--line-gold); }
-    .unit[data-theme="108"] { --stage: url("assets/fundo-fogos.jpg"); }
-    .unit[data-theme="bsb"] { --stage: url("assets/fundo-prisma.jpg"); }
+    .unit[data-theme="108"] { --stage: url("assets/fundo-fogos-800.webp"); }
+    .unit[data-theme="bsb"] { --stage: url("assets/fundo-prisma-800.webp"); }
+    @media (min-width: 900px) {
+      .unit[data-theme="108"] { --stage: url("assets/fundo-fogos-1600.webp"); }
+      .unit[data-theme="bsb"] { --stage: url("assets/fundo-prisma-1600.webp"); }
+    }
     .unit-title { grid-column: 1 / -1; display: grid; justify-items: center; margin: -10px 0 -6px; }
     .unit-title img { width: min(100%, 460px); height: auto; filter: drop-shadow(0 10px 40px color-mix(in oklch, var(--glow) 35%, transparent)); }
     .unit-body h3.unit-name { margin: 16px 0 0; font-size: 11px; font-weight: 500; letter-spacing: .34em; text-transform: uppercase; color: var(--gold); line-height: 1.5; }
@@ -516,8 +528,8 @@
     <!-- TOPO + FORMULÁRIO -->
     <section class="hero" id="top">
       <div class="hero-bg" aria-hidden="true">
-        <img class="bg bg-gold" src="assets/fundo-fogos.jpg" alt="" fetchpriority="high" decoding="async" width="1600" height="900">
-        <img class="bg bg-prisma" src="assets/fundo-prisma.jpg" alt="" decoding="async" width="1600" height="900">
+        <img class="bg bg-gold" src="assets/fundo-fogos-800.webp" srcset="assets/fundo-fogos-800.webp 800w, assets/fundo-fogos-1600.webp 1600w" sizes="100vw" alt="" fetchpriority="high" decoding="async" width="1600" height="900">
+        <img class="bg bg-prisma" data-srcset="assets/fundo-prisma-800.webp 800w, assets/fundo-prisma-1600.webp 1600w" sizes="100vw" alt="" decoding="async" width="1600" height="900">
         <canvas id="fireworks"></canvas>
       </div>
       <div class="container hero-grid">
@@ -603,16 +615,16 @@
 
         <div class="units">
           <article class="unit" id="unidade-108-sul" data-unit="Vasto 108 Sul" data-theme="108">
-            <div class="unit-title reveal"><img src="assets/titulo-108sul.png" alt="Réveillon 2027 Vasto 108 Sul" width="900" height="500" loading="lazy" decoding="async"></div>
+            <div class="unit-title reveal"><img src="assets/titulo-108sul-920.webp" srcset="assets/titulo-108sul-460.webp 460w, assets/titulo-108sul-920.webp 920w" sizes="(min-width: 520px) 460px, 90vw" alt="Réveillon 2027 Vasto 108 Sul" width="920" height="511" loading="lazy" decoding="async"></div>
             <div class="unit-media reveal">
               <div class="carousel" data-carousel aria-roledescription="carrossel" aria-label="Fotos do Vasto 108 Sul">
                 <div class="track">
-                  <figure class="slide"><img src="assets/108sul-1-720.jpg" srcset="assets/108sul-1-720.jpg 720w, assets/108sul-1-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Fachada do Vasto 108 Sul iluminada à noite" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/108sul-2-720.jpg" srcset="assets/108sul-2-720.jpg 720w, assets/108sul-2-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Jardim do Vasto 108 Sul com luzes sob a árvore" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/108sul-3-720.jpg" srcset="assets/108sul-3-720.jpg 720w, assets/108sul-3-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Salão do Vasto 108 Sul com mesas e poltronas" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/108sul-4-720.jpg" srcset="assets/108sul-4-720.jpg 720w, assets/108sul-4-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Salão do Vasto 108 Sul com teto de vidro e árvore" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/108sul-6-720.jpg" srcset="assets/108sul-6-720.jpg 720w, assets/108sul-6-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Música ao vivo no Vasto 108 Sul" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/108sul-7-720.jpg" srcset="assets/108sul-7-720.jpg 720w, assets/108sul-7-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Drink servido no bar do Vasto 108 Sul" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/108sul-1-480.webp" srcset="assets/108sul-1-480.webp 480w, assets/108sul-1-800.webp 800w, assets/108sul-1-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Fachada do Vasto 108 Sul iluminada à noite" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/108sul-2-480.webp" srcset="assets/108sul-2-480.webp 480w, assets/108sul-2-800.webp 800w, assets/108sul-2-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Jardim do Vasto 108 Sul com luzes sob a árvore" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/108sul-3-480.webp" srcset="assets/108sul-3-480.webp 480w, assets/108sul-3-800.webp 800w, assets/108sul-3-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Salão do Vasto 108 Sul com mesas e poltronas" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/108sul-4-480.webp" srcset="assets/108sul-4-480.webp 480w, assets/108sul-4-800.webp 800w, assets/108sul-4-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Salão do Vasto 108 Sul com teto de vidro e árvore" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/108sul-5-480.webp" srcset="assets/108sul-5-480.webp 480w, assets/108sul-5-800.webp 800w, assets/108sul-5-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Música ao vivo no Vasto 108 Sul" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/108sul-6-480.webp" srcset="assets/108sul-6-480.webp 480w, assets/108sul-6-800.webp 800w, assets/108sul-6-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Drink servido no bar do Vasto 108 Sul" loading="lazy" decoding="async" width="1200" height="1500"></figure>
                 </div>
               </div>
               <span class="glare" aria-hidden="true"></span>
@@ -649,16 +661,16 @@
           </article>
 
           <article class="unit" id="unidade-brasilia-shopping" data-unit="Vasto Brasília Shopping" data-theme="bsb">
-            <div class="unit-title reveal"><img src="assets/titulo-bsb.png" alt="Réveillon 2027 Timeless no Vasto Brasília Shopping" width="900" height="500" loading="lazy" decoding="async"></div>
+            <div class="unit-title reveal"><img src="assets/titulo-bsb-920.webp" srcset="assets/titulo-bsb-460.webp 460w, assets/titulo-bsb-920.webp 920w" sizes="(min-width: 520px) 460px, 90vw" alt="Réveillon 2027 Timeless no Vasto Brasília Shopping" width="920" height="511" loading="lazy" decoding="async"></div>
             <div class="unit-media reveal">
               <div class="carousel" data-carousel aria-roledescription="carrossel" aria-label="Fotos do Vasto Brasília Shopping">
                 <div class="track">
-                  <figure class="slide"><img src="assets/bsb-1-720.jpg" srcset="assets/bsb-1-720.jpg 720w, assets/bsb-1-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Fachada do Vasto Brasília Shopping" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/bsb-2-720.jpg" srcset="assets/bsb-2-720.jpg 720w, assets/bsb-2-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Salão do Vasto Brasília Shopping com o mural de Nova York ao fundo" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/bsb-3-720.jpg" srcset="assets/bsb-3-720.jpg 720w, assets/bsb-3-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Bar de ônix do Vasto Brasília Shopping com luzes douradas" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/bsb-4-720.jpg" srcset="assets/bsb-4-720.jpg 720w, assets/bsb-4-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Salão do Vasto Brasília Shopping com mesas postas e adega" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/bsb-5-720.jpg" srcset="assets/bsb-5-720.jpg 720w, assets/bsb-5-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Cantinho com mural de Nova York no Vasto Brasília Shopping" loading="lazy" decoding="async" width="1200" height="1500"></figure>
-                  <figure class="slide"><img src="assets/bsb-6-720.jpg" srcset="assets/bsb-6-720.jpg 720w, assets/bsb-6-1200.jpg 1200w" sizes="(min-width: 900px) 560px, 100vw" alt="Sofás vermelhos do Vasto Brasília Shopping" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/bsb-1-480.webp" srcset="assets/bsb-1-480.webp 480w, assets/bsb-1-800.webp 800w, assets/bsb-1-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Fachada do Vasto Brasília Shopping" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/bsb-2-480.webp" srcset="assets/bsb-2-480.webp 480w, assets/bsb-2-800.webp 800w, assets/bsb-2-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Salão do Vasto Brasília Shopping com o mural de Nova York ao fundo" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/bsb-3-480.webp" srcset="assets/bsb-3-480.webp 480w, assets/bsb-3-800.webp 800w, assets/bsb-3-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Bar de ônix do Vasto Brasília Shopping com luzes douradas" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/bsb-4-480.webp" srcset="assets/bsb-4-480.webp 480w, assets/bsb-4-800.webp 800w, assets/bsb-4-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Salão do Vasto Brasília Shopping com mesas postas e adega" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/bsb-5-480.webp" srcset="assets/bsb-5-480.webp 480w, assets/bsb-5-800.webp 800w, assets/bsb-5-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Cantinho com mural de Nova York no Vasto Brasília Shopping" loading="lazy" decoding="async" width="1200" height="1500"></figure>
+                  <figure class="slide"><img src="assets/bsb-6-480.webp" srcset="assets/bsb-6-480.webp 480w, assets/bsb-6-800.webp 800w, assets/bsb-6-1200.webp 1200w" sizes="(min-width: 900px) 560px, calc(100vw - 80px)" alt="Sofás vermelhos do Vasto Brasília Shopping" loading="lazy" decoding="async" width="1200" height="1500"></figure>
                 </div>
               </div>
               <span class="glare" aria-hidden="true"></span>
@@ -710,7 +722,7 @@
     <!-- CHAMADA FINAL -->
     <section class="section finale" id="final">
       <div class="finale-media" aria-hidden="true">
-        <img src="assets/final-1200.jpg" srcset="assets/final-1200.jpg 1200w, assets/final-2400.jpg 2400w" sizes="100vw" alt="" loading="lazy" decoding="async" width="2400" height="1029">
+        <img src="assets/final-800.webp" srcset="assets/final-800.webp 800w, assets/final-1600.webp 1600w" sizes="100vw" alt="" loading="lazy" decoding="async" width="1600" height="686">
       </div>
       <div class="glitter" aria-hidden="true"></div>
       <div class="container reveal">
@@ -723,7 +735,7 @@
     </section>
   </main>
 
-  <footer>
+  <footer style="content-visibility: auto; contain-intrinsic-size: auto 120px">
     <div class="container">
       <img src="assets/logo-dourada.png" alt="Vasto Restaurante" width="92" height="31" loading="lazy">
       <p>© 2026 Vasto · Todos os direitos reservados · <a href="https://cocobambu.com/policy" target="_blank" rel="noopener">Política de Privacidade</a></p>
@@ -854,15 +866,17 @@
       var canvas = document.getElementById('dust');
       if (!canvas.getContext) return;
       var ctx = canvas.getContext('2d');
-      var dpr = Math.min(window.devicePixelRatio || 1, 2), w, h, dots = [], mx = 0, my = 0, ox = 0, oy = 0, running = true;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2), w, h, dots = [], mx = 0, my = 0, ox = 0, oy = 0, running = true, lastT = 0;
       function size() {
         w = canvas.clientWidth; h = canvas.clientHeight;
         canvas.width = w * dpr; canvas.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        var n = Math.round(Math.min(34, Math.max(14, w * h / 40000)));
+        var n = finePointer ? Math.round(Math.min(34, Math.max(14, w * h / 40000))) : 12; // menos partículas no celular
         dots = [];
         for (var i = 0; i < n; i++) dots.push({ x: Math.random() * w, y: Math.random() * h, r: .5 + Math.random() * 1.1, v: .04 + Math.random() * .12, z: .3 + Math.random(), p: Math.random() * 6.28 });
       }
       function frame(t) {
+        if (!finePointer && t - lastT < 33) { if (running && !reduceMotion) requestAnimationFrame(frame); return; } // ~30 fps no celular
+        lastT = t;
         ctx.clearRect(0, 0, w, h);
         ox += (mx - ox) * .04; oy += (my - oy) * .04;
         dots.forEach(function (d) {
@@ -870,7 +884,7 @@
           var a = .12 + .28 * (reduceMotion ? .5 : (Math.sin(t / 1400 + d.p) + 1) / 2);
           ctx.beginPath(); ctx.arc(d.x - ox * 14 * d.z, d.y - oy * 14 * d.z, d.r, 0, 6.283);
           ctx.fillStyle = 'rgba(214, 170, 96,' + a.toFixed(3) + ')';
-          ctx.shadowColor = 'rgba(214, 170, 96, .7)'; ctx.shadowBlur = 5 * d.r;
+          if (finePointer) { ctx.shadowColor = 'rgba(214, 170, 96, .7)'; ctx.shadowBlur = 5 * d.r; }
           ctx.fill();
         });
         if (running && !reduceMotion) requestAnimationFrame(frame);
@@ -1030,12 +1044,28 @@
     });
 
 
+
+    // Desempenho: fundo de cada unidade só carrega perto da tela; o fundo prata do topo só quando a unidade é escolhida
+    (function lazyStages() {
+      var units = document.querySelectorAll('.unit');
+      if (!('IntersectionObserver' in window)) { units.forEach(function (u) { u.classList.add('stage-on'); }); return; }
+      var so = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('stage-on'); so.unobserve(e.target); } });
+      }, { rootMargin: '700px 0px' });
+      units.forEach(function (u) { so.observe(u); });
+    })();
+    var prisma = document.querySelector('.bg-prisma');
+    function loadPrisma() {
+      if (!prisma || !prisma.dataset.srcset) return;
+      prisma.srcset = prisma.dataset.srcset; prisma.removeAttribute('data-srcset');
+    }
+
     // O topo acompanha o tema da unidade escolhida: dourado (108 Sul) ou prata e azul (Brasília Shopping)
     (function heroTheme() {
       var hero = document.querySelector('.hero');
       document.querySelectorAll('input[name="unidade"]').forEach(function (r) {
         r.addEventListener('change', function () {
-          if (r.checked) hero.setAttribute('data-theme', r.value.indexOf('Brasília') > -1 ? 'bsb' : '108');
+          if (r.checked) { hero.setAttribute('data-theme', r.value.indexOf('Brasília') > -1 ? 'bsb' : '108'); if (r.value.indexOf('Brasília') > -1) loadPrisma(); }
         });
       });
     })();
